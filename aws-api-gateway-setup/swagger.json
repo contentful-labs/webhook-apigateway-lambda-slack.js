@@ -1,0 +1,80 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "2016-04-18T08:20:40Z",
+    "title" : "webhooks"
+  },
+  "host" : "yourApiId.execute-api.us-east-1.amazonaws.com",
+  "basePath" : "/production",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/logging" : {
+      "post" : {
+        "consumes" : [ "application/vnd.contentful.management.v1+json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "X-Contentful-Webhook-Name",
+          "in" : "header",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "X-Contentful-Topic",
+          "in" : "header",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "security" : [ {
+          "api_key" : [ ]
+        } ]
+      }
+    },
+    "/notify" : {
+      "post" : {
+        "consumes" : [ "application/vnd.contentful.management.v1+json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "X-Contentful-Webhook-Name",
+          "in" : "header",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "X-Contentful-Topic",
+          "in" : "header",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "security" : [ {
+          "api_key" : [ ]
+        } ]
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "api_key" : {
+      "type" : "apiKey",
+      "name" : "x-api-key",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "Empty" : {
+      "type" : "object"
+    }
+  }
+}

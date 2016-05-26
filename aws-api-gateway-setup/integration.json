@@ -1,0 +1,18 @@
+{
+  "integrationResponses": {
+    "200": {
+      "responseTemplates": {
+        "application/json": null
+      },
+      "statusCode": "200"
+    }
+  },
+  "cacheKeyParameters": [],
+  "uri": "{FullPathToYourLambdaFunction}",
+  "httpMethod": "POST",
+  "requestTemplates": {
+    "application/vnd.contentful.management.v1+json": "{\n    \"topic\" : \"$input.params('X-Contentful-Topic')\",\n    \"name\" : \"$input.params('X-Contentful-Webhook-Name')\",\n    \"body\" : $input.json('$')\n}"
+  },
+  "cacheNamespace": "123456",
+  "type": "AWS"
+}
