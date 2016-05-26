@@ -13,7 +13,7 @@ This is an example on how to deploy a webhook transformer on AWS API Gateway and
 ## Requirement
 - You need an account at AWS and the [AWS CLI](https://aws.amazon.com/cli/) setup with your AWS credentials
 - node and npm installed
-- A space at [http://contentful.com](contentful.com) with an API key for the management API with read access.
+- A space at [contentful.com](http://contentful.com) with an API key for the management API with read access.
 - A slack channel with an [incoming webhook](https://api.slack.com/incoming-webhooks) configured
 
 ## Wiring it all together (it's not as bad as it looks)
