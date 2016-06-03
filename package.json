@@ -5,13 +5,14 @@
   "main": "lambda.js",
   "scripts": {
     "setup": "mkdir dist",
-    "test": "node test.js",
+    "test": "node src/test.js",
     "bundle": "zip -r dist/bundle.zip src/lambda.js node_modules",
     "deploy": "aws lambda update-function-code --function-name contentfulWebhookLambda --zip-file fileb://./dist/bundle.zip"
   },
   "author": "frederik@contentful.com",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.11.1"
+    "axios": "^0.11.1",
+    "promise": "^7.1.1"
   }
 }

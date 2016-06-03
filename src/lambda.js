@@ -15,9 +15,11 @@
  */
 exports.handler = function (event, context, callback) {
 
+  // The body of the entity (Entry / ContentType).
   const body = event.body;
   const id = body.sys.id;
   const spaceId = body.sys.space.sys.id;
+  // The type of the entity (Entry / ContentType).
   const type = body.sys.type;
 
   // We only want to post to slack if an entry is changed.
@@ -26,18 +28,25 @@ exports.handler = function (event, context, callback) {
     return;
   }
 
+  // The URL of your incoming webhook at slack,
   const slackURL = 'UrlOfYourIncomingWebhookAtSlack';
+  // URL pattern of the CMA endpoint.
   const cmaURL = `https://api.contentful.com/spaces/${spaceId}/`;
+  // A valid content management token.
   const cmaToken = 'ManagementTokenWithAccessToTheSpace';
 
+  // Maps URL fragments to types.
   const typeUrlMap = {
     "Entry": "entries",
     "Asset": "assets",
     "ContentType": "content_types"
   };
 
+  // Path to deeplink to the entity changed.
   const contentfulDeeplinkURL = `https://app.contentful.com/spaces/${spaceId}/${typeUrlMap[type]}/${id}`;
 
+  // Message template following the slack specification:
+  // https://api.slack.com/docs/formatting
   var slackMessageTemplate = {
     "channel": "#contenthooks",
     "username": `Webhook: ${event.name}`,
@@ -58,17 +67,18 @@ exports.handler = function (event, context, callback) {
 
   // Load the axios http lib.
   var axios = require('axios');
+  // Promise lib.
+  var Promise = require('promise');
 
   /*
    * 1. get the userId
    * 2. getTheName of the user
    * 3. post final message to slack
    */
-  getUserId().then(function (userId) {
-    return getUserName(userId);
-  }).then(function (userName) {
-    return postToSlack(userName);
-  }).then(function () {
+  getUserId().
+  then(getUserName).
+  then(postToSlack).
+  then(function () {
     callback(null, 'Webhook adaptor complete!');
   }).catch(function (error) {
     console.log('error', error);
@@ -76,7 +86,18 @@ exports.handler = function (event, context, callback) {
   });
 
 
+  /**
+   * The structure of the body of the payload follows th convention of our APIs. That means
+   * if an action does affect the Delivery API (e.g. publish), the body will not contain the
+   * id of the user who applied the change. If an action does affect the Management API
+   * (e.g. auto_save), the body will contain the id of the user who applied the change.
+   */
   function getUserId() {
+
+    // Do not ask the CMA for user id if already present in body.
+    if (body.sys.updatedBy !== undefined) {
+      return Promise.resolve(body.sys.updatedBy.sys.id);
+    }
 
     return axios({
       url: cmaURL + typeUrlMap[type] + '/' + id,
@@ -91,6 +112,12 @@ exports.handler = function (event, context, callback) {
     });
   }
 
+
+  /**
+   * Request the user name from CMA.
+   * @param userId Id of the user.
+   * @returns {axios.Promise}
+   */
   function getUserName(userId) {
     return axios({
       url: cmaURL + 'users/',
@@ -110,6 +137,12 @@ exports.handler = function (event, context, callback) {
     })
   }
 
+
+  /**
+   * Post final message to slack webhook.
+   * @param userName Username.
+   * @returns {*|axios.Promise}
+   */
   function postToSlack(userName) {
     console.log('postToSlack');
 
